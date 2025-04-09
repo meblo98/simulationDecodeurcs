@@ -1,0 +1,10 @@
+<h2>Ajouter une chaîne au décodeur @ViewBag.AdresseIP</h2>
+<form asp-action="AjouterChaine" method="post">
+    <input type="hidden" name="clientId" value="@ViewBag.ClientId" />
+    <input type="hidden" name="adresseIP" value="@ViewBag.AdresseIP" />
+    <div class="form-group">
+        <label>Nom de la chaîne</label>
+        <input name="nomChaine" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+</form>

@@ -1,0 +1,34 @@
+@model List<Decodeur>
+
+<h2>Liste des décodeurs pour le client @ViewBag.ClientId</h2>
+<a asp-action="AssignerDecodeur" asp-route-clientId="@ViewBag.ClientId" class="btn btn-success">Assigner un décodeur</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Adresse IP</th>
+            <th>État</th>
+            <th>Chaînes</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var decodeur in Model)
+        {
+            <tr>
+                <td>@decodeur.AdresseIP</td>
+                <td>@decodeur.Etat</td>
+                <td>@string.Join(", ", decodeur.Chaines)</td>
+                <td>
+                    <a asp-action="EtatDecodeur" asp-route-adresseIP="@decodeur.AdresseIP" class="btn btn-info">État</a>
+                    <a asp-action="RedemarrerDecodeur" asp-route-adresseIP="@decodeur.AdresseIP" class="btn btn-warning">Redémarrer</a>
+                    <a asp-action="AjouterChaine" asp-route-clientId="@ViewBag.ClientId" asp-route-adresseIP="@decodeur.AdresseIP" class="btn btn-primary">Ajouter chaîne</a>
+                    <form asp-action="RetirerDecodeur" method="post" style="display:inline;">
+                        <input type="hidden" name="clientId" value="@ViewBag.ClientId" />
+                        <input type="hidden" name="adresseIP" value="@decodeur.AdresseIP" />
+                        <button type="submit" class="btn btn-danger">Retirer</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,9 @@
+<h2>Assigner un décodeur au client @ViewBag.ClientId</h2>
+<form asp-action="AssignerDecodeur" method="post">
+    <input type="hidden" name="clientId" value="@ViewBag.ClientId" />
+    <div class="form-group">
+        <label>Adresse IP</label>
+        <input name="adresseIP" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Assigner</button>
+</form>

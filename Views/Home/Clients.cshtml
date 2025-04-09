@@ -1,0 +1,29 @@
+@model List<Client>
+
+<h2>Liste des clients</h2>
+<a asp-action="CreerClient" class="btn btn-success">Créer un client</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var client in Model)
+        {
+            <tr>
+                <td>@client.Id</td>
+                <td>@client.Nom</td>
+                <td>
+                    <a asp-action="Decodeurs" asp-route-clientId="@client.Id" class="btn btn-info">Décodeurs</a>
+                    <form asp-action="SupprimerClient" method="post" style="display:inline;">
+                        <input type="hidden" name="clientId" value="@client.Id" />
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

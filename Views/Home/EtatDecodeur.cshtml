@@ -1,0 +1,11 @@
+@model Decodeur
+
+<h2>État du décodeur @Model.AdresseIP</h2>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info">@TempData["Message"]</div>
+}
+<p>État : @Model.Etat</p>
+<p>Dernier redémarrage : @Model.DernierRedemarrage</p>
+<p>Dernière réinitialisation : @Model.DerniereReinitialisation</p>
+<a asp-action="Clients" class="btn btn-secondary">Retour</a>
