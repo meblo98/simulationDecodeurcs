@@ -1,9 +1,17 @@
-<h2>Assigner un décodeur au client @ViewBag.ClientId</h2>
+@model AssignerDecodeurViewModel
+
+<h2>Assigner un décodeur au client @Model.ClientId</h2>
 <form asp-action="AssignerDecodeur" method="post">
-    <input type="hidden" name="clientId" value="@ViewBag.ClientId" />
+    <input type="hidden" asp-for="ClientId" />
     <div class="form-group">
-        <label>Adresse IP</label>
-        <input name="adresseIP" class="form-control" />
+        <label>Décodeur</label>
+        <select asp-for="AdresseIP" class="form-control">
+            <option value="">-- Sélectionner un décodeur --</option>
+            @foreach (var decodeur in Model.DecodeursDisponibles)
+            {
+                <option value="@decodeur.AdresseIP">@decodeur.AdresseIP (@decodeur.Etat)</option>
+            }
+        </select>
     </div>
     <button type="submit" class="btn btn-primary">Assigner</button>
 </form>

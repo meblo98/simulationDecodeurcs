@@ -66,19 +66,25 @@ public class HomeController : Controller
     }
 
     // 4. Assigner un décodeur à un client
-    public IActionResult AssignerDecodeur(string clientId)
+ public async Task<IActionResult> AssignerDecodeur(string clientId)
+{
+    if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId"))) return RedirectToAction("Index");
+    
+    var decodeursDisponibles = await gestionnaireDecodeurs.ObtenirTousDecodeursDisponibles();
+    var model = new AssignerDecodeurViewModel
     {
-        if (string.IsNullOrEmpty(HttpContext.Session.GetString("UserId"))) return RedirectToAction("Index");
-        ViewBag.ClientId = clientId;
-        return View();
-    }
+        ClientId = clientId,
+        DecodeursDisponibles = decodeursDisponibles
+    };
+    return View(model);
+}
 
-    [HttpPost]
-    public IActionResult AssignerDecodeur(string clientId, string adresseIP)
-    {
-        gestionnaireDecodeurs.AssignerDecodeurAClient(clientId, adresseIP);
-        return RedirectToAction("Decodeurs", new { clientId });
-    }
+[HttpPost]
+public IActionResult AssignerDecodeur(AssignerDecodeurViewModel model)
+{
+    gestionnaireDecodeurs.AssignerDecodeurAClient(model.ClientId, model.AdresseIP);
+    return RedirectToAction("Decodeurs", new { clientId = model.ClientId });
+}
 
     // 5. Afficher la liste des décodeurs (pour un client)
     public async Task<IActionResult> Decodeurs(string clientId)

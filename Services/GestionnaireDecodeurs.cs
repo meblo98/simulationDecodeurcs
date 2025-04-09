@@ -15,6 +15,23 @@ public class GestionnaireDecodeurs
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
+    // Nouvelle méthode : Récupérer tous les décodeurs disponibles via l'API
+    public async Task<List<Decodeur>> ObtenirTousDecodeursDisponibles()
+    {
+        string[] plagesIP = Enumerable.Range(1, 12).Select(i => $"127.0.10.{i}").ToArray();
+        List<Decodeur> decodeurs = new List<Decodeur>();
+
+        foreach (var ip in plagesIP)
+        {
+            var decodeur = await ObtenirEtatDecodeur(ip);
+            if (decodeur != null)
+            {
+                decodeurs.Add(decodeur);
+            }
+        }
+        return decodeurs;
+    }
+
     // 4. Assigner un décodeur à un client
     public void AssignerDecodeurAClient(string clientId, string adresseIP)
     {
@@ -25,22 +42,28 @@ public class GestionnaireDecodeurs
         }
     }
 
-    // 5. Afficher la liste des décodeurs (pour un client)
+    // 5. Afficher la liste des décodeurs (pour un client) via l'API
     public async Task<List<Decodeur>> ObtenirListeDecodeurs(string clientId)
     {
-        var client = db.ObtenirClient(clientId);
-        if (client == null) return new List<Decodeur>();
+        var clientDb = db.ObtenirClient(clientId);
+        if (clientDb == null) return new List<Decodeur>();
 
+        string[] plagesIP = Enumerable.Range(1, 12).Select(i => $"127.0.10.{i}").ToArray();
         List<Decodeur> decodeurs = new List<Decodeur>();
-        foreach (var decodeur in client.Decodeurs)
+
+        foreach (var ip in plagesIP)
         {
-            var etatDecodeur = await ObtenirEtatDecodeur(decodeur.AdresseIP);
-            if (etatDecodeur != null)
+            var decodeur = await ObtenirEtatDecodeur(ip);
+            if (decodeur != null)
             {
-                decodeur.Etat = etatDecodeur.Etat;
-                decodeur.DernierRedemarrage = etatDecodeur.DernierRedemarrage;
-                decodeur.DerniereReinitialisation = etatDecodeur.DerniereReinitialisation;
-                decodeurs.Add(decodeur);
+                var decodeurAssigne = clientDb.Decodeurs.FirstOrDefault(d => d.AdresseIP == ip);
+                if (decodeurAssigne != null)
+                {
+                    decodeurAssigne.Etat = decodeur.Etat;
+                    decodeurAssigne.DernierRedemarrage = decodeur.DernierRedemarrage;
+                    decodeurAssigne.DerniereReinitialisation = decodeur.DerniereReinitialisation;
+                    decodeurs.Add(decodeurAssigne);
+                }
             }
         }
         return decodeurs;
@@ -62,7 +85,7 @@ public class GestionnaireDecodeurs
         return false;
     }
 
-    // 7. Obtenir l’état d’un décodeur
+    // 7. Obtenir l’état d’un décodeur via l'API
     public async Task<Decodeur> ObtenirEtatDecodeur(string adresseIP)
     {
         var postDataValues = new { id = codePermanent, address = adresseIP, action = "info" };
@@ -86,7 +109,7 @@ public class GestionnaireDecodeurs
         return null;
     }
 
-    // 8. Redémarrer un décodeur (avec notification)
+    // 8. Redémarrer un décodeur (avec notification) via l'API
     public async Task<(bool succes, string message)> RedemarrerDecodeur(string adresseIP)
     {
         var postDataValues = new { id = codePermanent, address = adresseIP, action = "reset" };
@@ -102,7 +125,7 @@ public class GestionnaireDecodeurs
         return (false, "Erreur lors du redémarrage du décodeur.");
     }
 
-    // 9. Ajouter une chaîne à un décodeur (simulation)
+    // 9. Ajouter une chaîne à un décodeur (simulé localement)
     public bool AjouterChaineADecodeur(string clientId, string adresseIP, string nomChaine)
     {
         var client = db.ObtenirClient(clientId);
@@ -118,7 +141,7 @@ public class GestionnaireDecodeurs
         return false;
     }
 
-    // 10. Retirer une chaîne d’un décodeur (simulation)
+    // 10. Retirer une chaîne d’un décodeur (simulé localement)
     public bool RetirerChaineDeDecodeur(string clientId, string adresseIP, string nomChaine)
     {
         var client = db.ObtenirClient(clientId);
