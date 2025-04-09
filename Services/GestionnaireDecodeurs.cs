@@ -5,7 +5,7 @@ using System.Text.Json;
 public class GestionnaireDecodeurs
 {
     private readonly HttpClient client;
-    private readonly string codePermanent = "AAAA00000000"; // Remplace par ton code permanent
+    private readonly string codePermanent = "DIAS73040300"; // Remplace par ton code permanent
     private readonly BaseDeDonnees db;
 
     public GestionnaireDecodeurs(HttpClient httpClient, BaseDeDonnees db)

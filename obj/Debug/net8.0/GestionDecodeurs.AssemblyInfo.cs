@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GestionDecodeurs")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+00e86005d9970ad14b5494080afa191e613f8281")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+10cbd62f421666686e0f4c4a14b6ed95dcb96c26")]
 [assembly: System.Reflection.AssemblyProductAttribute("GestionDecodeurs")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GestionDecodeurs")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
