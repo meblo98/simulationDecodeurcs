@@ -96,16 +96,20 @@ public class GestionnaireDecodeurs
         {
             var jsonResponse = await response.Content.ReadAsStringAsync();
             var data = JsonSerializer.Deserialize<Dictionary<string, string>>(jsonResponse);
-            if (data["response"] == "OK")
+
+            if (data.TryGetValue("response", out var responseValue) && responseValue == "OK")
             {
-                return new Decodeur(adresseIP)
+                var decodeur = new Decodeur(adresseIP)
                 {
-                    Etat = data["state"],
-                    DernierRedemarrage = DateTime.Parse(data["lastRestart"]),
-                    DerniereReinitialisation = DateTime.Parse(data["lastReinit"])
+                    Etat = data.ContainsKey("state") ? data["state"] : "Inconnu",
+                    DernierRedemarrage = data.ContainsKey("lastRestart") ? DateTime.Parse(data["lastRestart"]) : (DateTime?)null,
+                    DerniereReinitialisation = data.ContainsKey("lastReinit") ? DateTime.Parse(data["lastReinit"]) : (DateTime?)null
                 };
+
+                return decodeur;
             }
         }
+
         return null;
     }
 
